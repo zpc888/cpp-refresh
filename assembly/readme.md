@@ -7,12 +7,18 @@ At low level, cpu only provides rudimentary branch/jump instruction. Branch can 
 
 From high level language construct into low level instruction, a de-construction process is needed. Developers should write pseduo-code to decompose a high level language construct statement. 
 
+<table>
+<tr><th>C</th><th>Deconstruct in pseudo code</th></tr>
+<tr><td valign="top">
+
 ```c
 for (i=0; i< 10; i++) {
     s += a[i];
 }
 ```
-De-construct to:
+
+</td><td>
+
 ```
 loop: 
     j = i - 10;
@@ -25,17 +31,16 @@ end_loop:
     flush registry-value for s to memory s address;
 ```
 
+</td></tr>
+</table>
+
 ## States
 ### Before run
-* s = -1  # sum
-* i = -1
-* a intact
+``` s = -1;  i = -1; a = [2, 4, 6, ..., 20]; ```
 ![Initial States](images/sum-1-to-10-states-before-run.png)
 
 ### After run
-* s = 110
-* i = 10
-* a intact
+``` s = 110;  i = 10; a = [2, 4, 6, ..., 20]; ```
 ![Final States](images/sum-1-to-10-states-after-run.png)
 
 # Code to if-else: max
@@ -43,6 +48,10 @@ end_loop:
 Same as previous `sum 1 to 10`
 
 ## Solution
+<table>
+<tr><th>C</th><th>Deconstruct in pseudo code</th></tr>
+<tr><td valign="top">
+
 ```c
 max = a > b ? a : b;
 
@@ -53,7 +62,9 @@ if (a > b) {
     max = b;
 }
 ```
-De-construct to:
+
+</td><td>
+
 ``` 
     j = a - b;
     goto then if j > 0;
@@ -65,16 +76,15 @@ end_if:
     flush registry-value for max to memory max address;
 ```
 
+</td></tr>
+</table>
+
 ## States
 ### Before run
-* a = 1  
-* b = 2
-* max = -1
+``` a = 1;  b = 2; max = -1; ```
 ![Initial States](images/if-max-after-run-states.png)
 
 ### After run
-* a = 1  
-* b = 2
-* max = 2
+``` a = 1;  b = 2; max = 2; ```
 ![Final States](images/if-max-after-run-states.png)
 
