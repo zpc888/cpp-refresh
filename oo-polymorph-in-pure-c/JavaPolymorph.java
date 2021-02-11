@@ -23,23 +23,19 @@ public class JavaPolymorph {
 
 	static void resetValue() { x = 8; y = 8; }
 
-	static void dispatchOn(A a) {
+	static void polymorphOn(A a, int expectX, int expectY) {
+		resetValue();
 		a.bar();
 		a.foo();
+
+		System.out.printf("Verify: expect x = %3d; y = %2d%n", expectX, expectY);
+		System.out.printf("        actual x = %3d; y = %2d  ==> [%s]%n", x, y, x == expectX && y == expectY ? "OK" : "ERROR");
 	}
+
 	public static void main(String[] args) {
-		resetValue();
-		dispatchOn( new A() );
-		System.out.printf("expect: x = %3d; y = %3d%n", 10, 18);
-		System.out.printf("actual: x = %3d; y = %3d  ==> [%s]%n", JavaPolymorph.x, JavaPolymorph.y, JavaPolymorph.x == 10 && JavaPolymorph.y == 18 ? "OK" : "ERROR");
-		resetValue();
-		dispatchOn( new B() );
-		System.out.printf("expect: x = %3d; y = %3d%n", 108, 18);
-		System.out.printf("actual: x = %3d; y = %3d  ==> [%s]%n", JavaPolymorph.x, JavaPolymorph.y, JavaPolymorph.x == 108 && JavaPolymorph.y == 18 ? "OK" : "ERROR");
-		resetValue();
-		dispatchOn( new C(500) );
-		System.out.printf("expect: x = %3d; y = %3d%n", 608, 18);
-		System.out.printf("actual: x = %3d; y = %3d  ==> [%s]%n", JavaPolymorph.x, JavaPolymorph.y, JavaPolymorph.x == 608 && JavaPolymorph.y == 18 ? "OK" : "ERROR");
+		polymorphOn( new A(), 10, 18 );
+		polymorphOn( new B(), 108, 18 );
+		polymorphOn( new C(500), 608, 18 );
 	}
 }
 
