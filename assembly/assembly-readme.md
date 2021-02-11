@@ -88,3 +88,50 @@ end_if:
 ``` a = 1;  b = 2; max = 2; ```
 ![Final States](images/if-max-after-run-states.png)
 
+
+# Code to static-method-call
+## Intent
+How to mimic high level program control flow in assembly, such as method call and return by using jump and program counter (PC)
+
+## Solution
+<table>
+<tr><th>C</th><th>Deconstruct in pseudo code</th></tr>
+<tr><td valign="top">
+
+```c
+int x = 6;
+
+void increase() {
+    x ++;
+}
+
+int main() {
+    increase();
+    x ++;
+}
+```
+
+</td><td>
+
+``` 
+    execute caller instructions
+    before reaching call sub-procedure
+    store current-pc + next-instruction-length to register-5
+    jump to sub-procedure address
+    execute sub-procedure instructions
+    after done sub-procedure
+    jump back to address of value of register-5
+    resume caller instructions right after sub-procedure-call
+```
+
+</td></tr>
+</table>
+
+## States
+### Before run
+``` x = 6; ```
+![Initial States](images/static-method-call-before.png)
+
+### After run
+``` x = 8; ```
+![Final States](images/static-method-call-after.png)
