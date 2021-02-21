@@ -93,7 +93,14 @@ void polymorphOn(struct A* a, int expectX, int expectY) {
 }
 
 int main() {
-    polymorphOn(new_A(),      2, 10);
-    polymorphOn(new_B(),    100, 10);
-    polymorphOn(new_C(500), 600, 10);
+    struct A* a = new_A();
+    struct B* b = new_B();
+    struct C* c = new_C(500);
+    polymorphOn(a,      2, 10);
+    polymorphOn(b,    100, 10);
+    polymorphOn(c, 600, 10);
+    // valgrind to detect memory leak
+    free(c);
+    free(b);
+    free(a);
 }
