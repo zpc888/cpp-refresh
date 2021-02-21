@@ -5,28 +5,86 @@ main:
 
     # a object
     gpc  $0x06, r6        # r6 = current address of pc + 6
-    j    new_A            # call new A
+    j    new_A            # call new B
 
-    ld   0x0 (r0), r1      # r1 = a->class
-    gpc  $0x02, r6         # r6 = PC + 2
-    j    *0x0 (r1)         # a->class->bar
-    gpc  $0x02, r6         # r6 = PC + 2
-    j    *0x4 (r1)         # a->class->foo
-
-    ld   $ax, r2           # r2 = address of ax
-    ld   0x04 (r0), r3     # r3 = x
-    st   r3,  0x0 (r2)     # ax = a->x
-
+    deca r5
     ld   $ay, r2           # r2 = address of ay
-    ld   0x08 (r0), r3     # r3 = y
-    st   r3,  0x0 (r2)     # ay = a->y
+    st   r2, 0x0 (r5)
+
+    deca r5
+    ld   $ax, r2           # r2 = address of ax
+    st   r2, 0x0 (r5)
+
+    deca r5
+    st   r0, 0x0 (r5)
 
     gpc  $0x06, r6         # r6 = PC + 2
-    j    free              # reformat heap to -1 to mimic releasing memory
+    j    polymorphOn       # pass new_B instance
+
+    gpc  $0x06, r6         # r6 = PC + 2
+    j    free
 
     # b object
     gpc  $0x06, r6        # r6 = current address of pc + 6
     j    new_B            # call new B
+
+    deca r5
+    ld   $by, r2           # r2 = address of by
+    st   r2, 0x0 (r5)
+
+    deca r5
+    ld   $bx, r2           # r2 = address of bx
+    st   r2, 0x0 (r5)
+
+    deca r5
+    st   r0, 0x0 (r5)
+
+    gpc  $0x06, r6         # r6 = PC + 2
+    j    polymorphOn       # pass new_B instance
+
+    gpc  $0x06, r6         # r6 = PC + 2
+    j    free
+
+    # c object
+    deca r5
+    ld   $0x1F4, r2       # r2 = 500 for step parameter
+    st   r2, 0x0 (r5)     # as parameter for new_C(500)
+
+    gpc  $0x06, r6        # r6 = current address of pc + 6
+    j    new_C            # call new C
+
+    ld   $0xFFFFFFFF, r2  # release call frame
+    st   r2, 0x0 (r5)
+    inca r5
+
+    deca r5
+    ld   $cy, r2           # r2 = address of cy
+    st   r2, 0x0 (r5)
+
+    deca r5
+    ld   $cx, r2           # r2 = address of cx
+    st   r2, 0x0 (r5)
+
+    deca r5
+    st   r0, 0x0 (r5)
+
+    gpc  $0x06, r6         # r6 = PC + 2
+    j    polymorphOn       # pass new_B instance
+
+    gpc  $0x06, r6         # r6 = PC + 2
+    j    free
+
+
+    halt
+
+polymorphOn:                # top = this, then address to store x, bottom is address to store y
+    ld   0x0 (r5), r0       
+    ld   $0xFFFFFFFF, r2
+    st   r2, 0x0 (r5)
+    inca r5
+    
+    deca  r5                 # stack frame push
+    st    r6, 0x0 (r5)       # save return address on call stac
 
     ld   0x0 (r0), r1      # r1 = b->class
     gpc  $0x02, r6         # r6 = PC + 2
@@ -34,18 +92,26 @@ main:
     gpc  $0x02, r6         # r6 = PC + 2
     j    *0x4 (r1)         # b->class->foo
 
-    ld   $bx, r2           # r2 = address of bx
+    ld    0x0 (r5), r6     # restore return address from stack (pop)
+    ld   $0xFFFFFFFF, r3
+    st   r3, 0x0 (r5)
+    inca  r5
+
+    ld   0x0 (r5), r2       
+    ld   $0xFFFFFFFF, r3
+    st   r3, 0x0 (r5)
+    inca r5
     ld   0x04 (r0), r3     # r3 = x
     st   r3,  0x0 (r2)     # bx = b->x
 
-    ld   $by, r2           # r2 = address of by
+    ld   0x0 (r5), r2       
+    ld   $0xFFFFFFFF, r3
+    st   r3, 0x0 (r5)
+    inca r5
     ld   0x08 (r0), r3     # r3 = y
     st   r3,  0x0 (r2)     # by = b->y
 
-    gpc  $0x06, r6         # r6 = PC + 2
-    j    free              # reformat heap to -1 to mimic releasing memory
-
-    halt
+    j    0x0 (r6)           # return the call
 
 malloc:
     mov  r7,  r1            # r1 = r7, which is current free heap address
@@ -80,6 +146,8 @@ new_A:
     st    r2, 0x4 (r0)       # a->x = r2 = 0
     st    r2, 0x8 (r0)       # a->y = r2 = 0
     ld    0x0 (r5), r6       # restore return address from stack (pop)
+    ld   $0xFFFFFFFF, r2
+    st   r2, 0x0 (r5)
     inca  r5
     j     0x0 (r6)
 new_B:
@@ -94,6 +162,8 @@ new_B:
     st    r2, 0x4 (r0)       # b->x = r2 = 0
     st    r2, 0x8 (r0)       # b->y = r2 = 0
     ld    0x0 (r5), r6       # restore return address from stack (pop)
+    ld   $0xFFFFFFFF, r2
+    st   r2, 0x0 (r5)
     inca  r5
     j     0x0 (r6)
 
@@ -111,6 +181,8 @@ new_C:
     ld    0x4 (r5), r1       # r1 = step from parameter
     st    r1,  0x0c (r0)     # c->step = step from parameter
     ld    0x0 (r5), r6       # restore return address from stack (pop)
+    ld   $0xFFFFFFFF, r2
+    st   r2, 0x0 (r5)
     inca  r5
     j     0x0 (r6)
 
@@ -183,6 +255,8 @@ C_bar:
     gpc   $0x06, r6          # r6 = current address of pc + 6
     j     B_bar
     ld    0x0 (r5), r6       # restore return address from stack (pop)
+    ld   $0xFFFFFFFF, r2
+    st   r2, 0x0 (r5)
     inca  r5
 
     j     0x0 (r6)
