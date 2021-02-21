@@ -12,7 +12,7 @@ In this hypothetical domain, there are 3 classes, whose relationship is is-a to 
 
 [C implementation](./c-polymorph-in-fuction-pointer.c)
 
-[Assembly Implementation (based on Angela's Computer Theory and Assembly)](./assembly-polymorph.s)
+[Assembly Implementation (based on Angela's Textbook: Computer Theory and Assembly)](./assembly-polymorph.s)
 
 [Typescript Implementation](./TypescriptPolymorph.ts)
 
