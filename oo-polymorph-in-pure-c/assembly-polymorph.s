@@ -5,7 +5,7 @@ main:
 
     # a object
     gpc  $0x06, r6        # r6 = current address of pc + 6
-    j    new_A            # call new B
+    j    new_A            # call new A
 
     deca r5
     ld   $ay, r2           # r2 = address of ay
@@ -19,10 +19,10 @@ main:
     st   r0, 0x0 (r5)
 
     gpc  $0x06, r6         # r6 = PC + 2
-    j    polymorphOn       # pass new_B instance
+    j    polymorphOn       # pass new_A instance
 
     gpc  $0x06, r6         # r6 = PC + 2
-    j    free
+    j    free              # release heap
 
     # b object
     gpc  $0x06, r6        # r6 = current address of pc + 6
