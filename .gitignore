@@ -4,3 +4,8 @@
 **/*.class
 hello-world/hello
 **/run
+**/build
+**/target
+**/.settings
+**/.project
+**/.classpath
