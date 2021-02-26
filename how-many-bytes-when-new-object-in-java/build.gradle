@@ -16,13 +16,41 @@ dependencies {
     compile group: 'org.openjdk.jol', name: 'jol-core', version: "0.10"
 }
 
-task fatJar(type: Jar) {
+task fatNewObject(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Heap Memory Measure',
                     'Implementation-Version': '1.0',
-                    'Main-Class': 'HeapMemory'
+                    'Main-Class': 'mem.NewObjectTeller'
     }
-    baseName = project.name + "-RUNNABLE"
-    from { configurations.compile.collect { it.isDirectory() ? it : (it.name.startsWith("spring") ? [] : zipTree(it) ) } }
+    baseName = "tell-new-object-bytes"
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+
+task fatNewObjectArray(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Heap Memory Measure',
+                    'Implementation-Version': '1.0',
+                    'Main-Class': 'mem.NewObjectArrayTeller'
+    }
+    baseName = "tell-new-object-array-bytes"
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task fatNewCustom(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Heap Memory Measure',
+                    'Implementation-Version': '1.0',
+                    'Main-Class': 'mem.NewMyCustomTeller'
+    }
+    baseName = "tell-new-custom-bytes"
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task fatJar() {
+    dependsOn(fatNewObject)
+    dependsOn(fatNewObjectArray)
+    dependsOn(fatNewCustom)
 }
