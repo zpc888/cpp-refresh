@@ -49,8 +49,20 @@ task fatNewCustom(type: Jar) {
     with jar
 }
 
+task fatNewComplex(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Heap Memory Measure',
+                    'Implementation-Version': '1.0',
+                    'Main-Class': 'mem.NewComplexTeller'
+    }
+    baseName = "tell-new-complex-bytes"
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 task fatJar() {
     dependsOn(fatNewObject)
     dependsOn(fatNewObjectArray)
     dependsOn(fatNewCustom)
+    dependsOn(fatNewComplex)
 }
