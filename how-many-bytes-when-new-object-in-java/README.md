@@ -106,12 +106,8 @@ total: 24 bytes = 8 bytes mark word + 8 class pointer + 1 byte A.i + 7 bytes pad
 
 ## Complex Class
 <table>
-    <tr>
-<th> Main Object </th>
-<th> Dependent Object </th>
-</tr>
-    <tr>
-    <td>
+<tr> <th width="50%"> Main Object </th> <th width="50%"> Dependent Object </th> </tr> 
+<tr><td valign="top">
 
 ```java
 class D extends C {
@@ -129,8 +125,7 @@ class D extends C {
 }
 ```
 
-    </td>
-    <td>
+</td><td>
 
 ```java
 class B {
@@ -151,11 +146,10 @@ class E {
 }
 ```
 
-    </td>
-</tr>
+</td></tr>
 </table>
 
-* class pointer compressed
+### class pointer compressed
 
 java -XX:+UseCompressedOops -Djdk.attach.allowAttachSelf -jar build/libs/tell-new-complex-bytes.jar
 
@@ -184,14 +178,14 @@ Instance size: 72 bytes
 Space losses: 9 bytes internal + 4 bytes external = 13 bytes total
 ```
 
-### Observations:
+__Observations:__
 * When switching from parent class, it should be padded for divisible by 4
 * When switching from primitive type to class pointer, it should be padded for divisible by 4
 * At the end, it should be padded for divisible by 8 
 * All object reference (class pointer) will be 4 bytes when compressed
 * In short, memory alignment is 4 bytes and at the end, total alignment is 8 bytes
 
-* class pointer compress off
+### class pointer compress off
 
 java -XX:-UseCompressedOops -Djdk.attach.allowAttachSelf -jar build/libs/tell-new-complex-bytes.jar
 
@@ -217,8 +211,9 @@ java -XX:-UseCompressedOops -Djdk.attach.allowAttachSelf -jar build/libs/tell-ne
 88 - 95  java.lang.String D.aString
 Instance size: 96 bytes
 Space losses: 17 bytes internal + 0 bytes external = 17 bytes total
-``
-### Observations:
+```
+
+__Observations:__
 * When switching from parent class, it should be padded for divisible by 8
 * When switching from primitive type to class pointer, it should be padded for divisible by 8
 * At the end, it should be padded for divisible by 8 
