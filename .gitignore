@@ -1,5 +1,7 @@
 **/*.o
 **/a.out
+**/main
+**/.vscode
 **/*.swp
 **/*.class
 hello-world/hello
